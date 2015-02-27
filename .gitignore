@@ -1,0 +1,21 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# IntelliJ
+*.iml
+.idea/
+*.ipr
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# OSX
+.DS_Store
