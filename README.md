@@ -7,7 +7,7 @@ To install Beeter you must have installed:
 
 - JDK 7.0
 - Maven
-- An HTTP Web Server 
+- A HTTP Web Server 
 - MySQL
 
 ## Installation
