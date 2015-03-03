@@ -1,0 +1,355 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"for",
+				"fortunes"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/home/sergio/netkit-labs/BGP/lab.conf",
+			"settings":
+			{
+				"buffer_size": 218,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/sergio/netkit-labs/BGP/buildscenario.sh",
+			"settings":
+			{
+				"buffer_size": 937,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/sergio/netkit-labs/BGP/clean.sh",
+			"settings":
+			{
+				"buffer_size": 63,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/sergio/netkit-labs/BGP/ip_script.sh",
+			"settings":
+			{
+				"buffer_size": 422,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 369.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 512.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2deb499853c4371624f5a07e27c334aa' + 'bf8c4e67d14fb0525ba4f89698a6d7e1'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/sergio/netkit-labs/BGP"
+	],
+	"file_history":
+	[
+		"/home/sergio/netkit-labs/BGP/R1.startup",
+		"/home/sergio/netkit-labs/BGP/buildscenario.py",
+		"/home/sergio/dsa-projects/beeter-project/sql/beeterdb-user.sql",
+		"/home/sergio/dsa-projects/beeter-project/sql/beeterdb-schema.sql",
+		"/home/sergio/dsa-projects/beeter-project/sql/beeterdb-data.sql",
+		"/home/sergio/dsa-projects/beeter-project/sql/README.md",
+		"/home/sergio/dsa-projects/beeter-project/.gitignore",
+		"/home/sergio/netkit-labs/OSPF/buildscenario.sh",
+		"/home/sergio/netkit-labs/OSPF/clean.py",
+		"/home/sergio/netkit-labs/OSPF/scenario.py",
+		"/home/sergio/netkit-labs/static-routes/linux/lab.conf",
+		"/home/sergio/dsa-projects/exercises-java-lang/pom.xml",
+		"/home/sergio/dev/tutorials/angular/angular-phonecat/app/index.html",
+		"/home/sergio/dev/tutorials/angular/angular-phonecat/bower.json",
+		"/home/sergio/dsa-projects/upub/www/index.html",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/views/about.handlebars",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/index.js",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/views/layouts/main.handlebars",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/public/qa/tests-global.js",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/public/qa/tests-about.js",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/views/home.handlebars",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/lib/fortune.js",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/package.json",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/views/404.handlebars",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/views/500.handlebars",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/views/layouts/404.handlebars",
+		"/home/sergio/dev/nodejs/projects/book/meadowlark/site/.gitignore",
+		"/home/sergio/dev/nodejs/getting-started/public/about.html",
+		"/home/sergio/dev/nodejs/getting-started/hello.js",
+		"/home/sergio/dev/nodejs/getting-started/hello2.js",
+		"/home/sergio/dev/nodejs/getting-started/public/404.html",
+		"/home/sergio/dev/nodejs/getting-started/public/home.html",
+		"/home/sergio/dev/nodejs/getting-started/helloRouting.js",
+		"/home/sergio/dev/nodejs/getting-started/home.html",
+		"/home/sergio/dev/mozilla/HelloWorld2/src/Makefile"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"/27",
+			"next",
+			"});\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"/30"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/home/sergio/netkit-labs/BGP/lab.conf",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 218,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								193,
+								193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/sergio/netkit-labs/BGP/buildscenario.sh",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 937,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								236,
+								236
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/sergio/netkit-labs/BGP/clean.sh",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 63,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								45,
+								45
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/home/sergio/netkit-labs/BGP/ip_script.sh",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 422,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								346,
+								346
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "bgp.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 183.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

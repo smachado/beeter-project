@@ -31,4 +31,5 @@ package edu.upc.eetac.dsa.smachado.beeter;
 public interface BeeterMediaType {
     public final static String BEETER_API_STING = "application/vnd.beeter.sting+json";
     public final static String BEETER_API_STING_COLLECTION = "application/vnd.beeter.sting.collection+json";
+    public final static String BEETER_API_ERROR = "application/vnd.beeter.error+json";
 }
