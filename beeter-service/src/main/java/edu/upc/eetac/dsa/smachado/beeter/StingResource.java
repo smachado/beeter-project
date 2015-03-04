@@ -31,9 +31,7 @@ import edu.upc.eetac.dsa.smachado.beeter.model.StingCollection;
 
 import javax.sql.DataSource;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
@@ -43,42 +41,64 @@ import java.sql.*;
  */
 @Path("/stings")
 public class StingResource {
-    private String GET_STINGS_QUERY = "select s.*, u.name from stings s, users u where u.username=s.username order by creation_timestamp desc";
     private String GET_STING_BY_ID_QUERY = "select s.*, u.name from stings s, users u where u.username=s.username and s.stingid=?";
+    private String GET_STINGS_QUERY = "select s.*, u.name from stings s, users u where u.username=s.username and s.creation_timestamp < ifnull(?, now()) order by creation_timestamp desc limit ?";
+    private String GET_STINGS_QUERY_FROM_LAST = "select s.*, u.name from stings s, users u where u.username=s.username and s.creation_timestamp > ? order by creation_timestamp desc";
     private String INSERT_STING_QUERY = "insert into stings (username, subject, content) values (?, ?, ?)";
     private String DELETE_STING_QUERY = "delete from stings where stingid=?";
     private String UPDATE_STING_QUERY = "update stings set subject=ifnull(?, subject), content=ifnull(?, content) where stingid=?";
 
     @GET
     @Produces(BeeterMediaType.BEETER_API_STING_COLLECTION)
-    public StingCollection getStings() {
+    public StingCollection getStings(@QueryParam("length") int length,
+                                     @QueryParam("before") long before, @QueryParam("after") long after) {
         StingCollection stings = new StingCollection();
 
         Connection conn = null;
         try {
             conn = Database.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException("Could not connect to the database",
+                    Response.Status.SERVICE_UNAVAILABLE);
         }
 
         PreparedStatement stmt = null;
         try {
-            stmt = conn.prepareStatement(GET_STINGS_QUERY);
+            boolean updateFromLast = after > 0;
+            stmt = updateFromLast ? conn
+                    .prepareStatement(GET_STINGS_QUERY_FROM_LAST) : conn
+                    .prepareStatement(GET_STINGS_QUERY);
+            if (updateFromLast) {
+                stmt.setTimestamp(1, new Timestamp(after));
+            } else {
+                if (before > 0)
+                    stmt.setTimestamp(1, new Timestamp(before));
+                else
+                    stmt.setTimestamp(1, null);
+                length = (length <= 0) ? 5 : length;
+                stmt.setInt(2, length);
+            }
             ResultSet rs = stmt.executeQuery();
+            boolean first = true;
+            long oldestTimestamp = 0;
             while (rs.next()) {
                 Sting sting = new Sting();
                 sting.setStingid(rs.getInt("stingid"));
                 sting.setUsername(rs.getString("username"));
                 sting.setAuthor(rs.getString("name"));
                 sting.setSubject(rs.getString("subject"));
-                sting.setLastModified(rs.getTimestamp("last_modified")
-                        .getTime());
-                sting.setCreationTimestamp(rs
-                        .getTimestamp("creation_timestamp").getTime());
+                oldestTimestamp = rs.getTimestamp("last_modified").getTime();
+                sting.setLastModified(oldestTimestamp);
+                if (first) {
+                    first = false;
+                    stings.setNewestTimestamp(sting.getLastModified());
+                }
                 stings.addSting(sting);
             }
+            stings.setOldestTimestamp(oldestTimestamp);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException(e.getMessage(),
+                    Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             try {
                 if (stmt != null)
@@ -94,14 +114,42 @@ public class StingResource {
     @GET
     @Path("/{stingid}")
     @Produces(BeeterMediaType.BEETER_API_STING)
-    public Sting getSting(@PathParam("stingid") String stingid) {
+    public Response getSting(@PathParam("stingid") String stingid,
+                             @Context Request request) {
+        // Create CacheControl
+        CacheControl cc = new CacheControl();
+
+        Sting sting = getStingFromDatabase(stingid);
+
+        // Calculate the ETag on last modified date of user resource
+        EntityTag eTag = new EntityTag(Long.toString(sting.getLastModified()));
+
+        // Verify if it matched with etag available in http request
+        Response.ResponseBuilder rb = request.evaluatePreconditions(eTag);
+
+        // If ETag matches the rb will be non-null;
+        // Use the rb to return the response without any further processing
+        if (rb != null) {
+            return rb.cacheControl(cc).tag(eTag).build();
+        }
+
+        // If rb is null then either it is first time request; or resource is
+        // modified
+        // Get the updated representation and return with Etag attached to it
+        rb = Response.ok(sting).cacheControl(cc).tag(eTag);
+
+        return rb.build();
+    }
+
+    private Sting getStingFromDatabase(String stingid) {
         Sting sting = new Sting();
 
         Connection conn = null;
         try {
             conn = Database.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException("Could not connect to the database",
+                    Response.Status.SERVICE_UNAVAILABLE);
         }
 
         PreparedStatement stmt = null;
@@ -119,9 +167,13 @@ public class StingResource {
                         .getTime());
                 sting.setCreationTimestamp(rs
                         .getTimestamp("creation_timestamp").getTime());
+            } else {
+                throw new NotFoundException("There's no sting with stingid="
+                        + stingid);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException(e.getMessage(),
+                    Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             try {
                 if (stmt != null)
@@ -138,11 +190,13 @@ public class StingResource {
     @Consumes(BeeterMediaType.BEETER_API_STING)
     @Produces(BeeterMediaType.BEETER_API_STING)
     public Response createSting(Sting sting, @Context UriInfo uriInfo) throws URISyntaxException {
+        validateSting(sting);
         Connection conn = null;
         try {
             conn = Database.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException("Could not connect to the database",
+                    Response.Status.SERVICE_UNAVAILABLE);
         }
 
         PreparedStatement stmt = null;
@@ -158,12 +212,13 @@ public class StingResource {
             if (rs.next()) {
                 int stingid = rs.getInt(1);
 
-                sting = getSting(Integer.toString(stingid));
+                sting = getStingFromDatabase(Integer.toString(stingid));
             } else {
                 // Something has failed...
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException(e.getMessage(),
+                    Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             try {
                 if (stmt != null)
@@ -184,7 +239,8 @@ public class StingResource {
         try {
             conn = Database.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException("Could not connect to the database",
+                    Response.Status.SERVICE_UNAVAILABLE);
         }
 
         PreparedStatement stmt = null;
@@ -194,9 +250,11 @@ public class StingResource {
 
             int rows = stmt.executeUpdate();
             if (rows == 0)
-                ;// Deleting inexistent sting
+                throw new NotFoundException("There's no sting with stingid="
+                        + stingid);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException(e.getMessage(),
+                    Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             try {
                 if (stmt != null)
@@ -213,29 +271,34 @@ public class StingResource {
     @Consumes(BeeterMediaType.BEETER_API_STING)
     @Produces(BeeterMediaType.BEETER_API_STING)
     public Sting updateSting(@PathParam("stingid") String stingid, Sting sting) {
+        validateUpdateSting(sting);
         Connection conn = null;
         try {
             conn = Database.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException("Could not connect to the database",
+                    Response.Status.SERVICE_UNAVAILABLE);
         }
 
         PreparedStatement stmt = null;
         try {
-            stmt = conn.prepareStatement(UPDATE_STING_QUERY);
+            String sql = UPDATE_STING_QUERY;
+            stmt = conn.prepareStatement(sql);
             stmt.setString(1, sting.getSubject());
             stmt.setString(2, sting.getContent());
             stmt.setInt(3, Integer.valueOf(stingid));
 
             int rows = stmt.executeUpdate();
             if (rows == 1)
-                sting = getSting(stingid);
+                sting = getStingFromDatabase(stingid);
             else {
-                ;// Updating inexistent sting
+                throw new NotFoundException("There's no sting with stingid="
+                        + stingid);
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerErrorException(e.getMessage(),
+                    Response.Status.INTERNAL_SERVER_ERROR);
         } finally {
             try {
                 if (stmt != null)
@@ -246,5 +309,25 @@ public class StingResource {
         }
 
         return sting;
+    }
+
+    private void validateUpdateSting(Sting sting) {
+        if (sting.getSubject() != null && sting.getSubject().length() > 100)
+            throw new BadRequestException(
+                    "Subject can't be greater than 100 characters.");
+        if (sting.getContent() != null && sting.getContent().length() > 500)
+            throw new BadRequestException(
+                    "Content can't be greater than 500 characters.");
+    }
+
+    private void validateSting(Sting sting) {
+        if (sting.getSubject() == null)
+            throw new BadRequestException("Subject can't be null.");
+        if (sting.getContent() == null)
+            throw new BadRequestException("Content can't be null.");
+        if (sting.getSubject().length() > 100)
+            throw new BadRequestException("Subject can't be greater than 100 characters.");
+        if (sting.getContent().length() > 500)
+            throw new BadRequestException("Content can't be greater than 500 characters.");
     }
 }

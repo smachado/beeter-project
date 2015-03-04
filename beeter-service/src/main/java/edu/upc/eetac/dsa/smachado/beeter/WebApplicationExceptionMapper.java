@@ -26,10 +26,25 @@
 package edu.upc.eetac.dsa.smachado.beeter;
 
 /**
- * Created by Sergio Machado on 27/02/15.
+ * Created by Sergio Machado on 2/03/15.
  */
-public interface BeeterMediaType {
-    public final static String BEETER_API_STING = "application/vnd.beeter.sting+json";
-    public final static String BEETER_API_STING_COLLECTION = "application/vnd.beeter.sting.collection+json";
-    public final static String BEETER_API_ERROR = "application/vnd.beeter.error+json";
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+import edu.upc.eetac.dsa.smachado.beeter.model.BeeterError;
+
+@Provider
+public class WebApplicationExceptionMapper implements
+        ExceptionMapper<WebApplicationException> {
+    @Override
+    public Response toResponse(WebApplicationException exception) {
+        BeeterError error = new BeeterError(
+                exception.getResponse().getStatus(), exception.getMessage());
+        return Response.status(error.getStatus()).entity(error)
+                .type(BeeterMediaType.BEETER_API_ERROR).build();
+    }
+
 }

@@ -23,13 +23,38 @@
  * THE SOFTWARE.
  */
 
-package edu.upc.eetac.dsa.smachado.beeter;
+package edu.upc.eetac.dsa.smachado.beeter.model;
 
 /**
- * Created by Sergio Machado on 27/02/15.
+ * Created by Sergio Machado on 2/03/15.
  */
-public interface BeeterMediaType {
-    public final static String BEETER_API_STING = "application/vnd.beeter.sting+json";
-    public final static String BEETER_API_STING_COLLECTION = "application/vnd.beeter.sting.collection+json";
-    public final static String BEETER_API_ERROR = "application/vnd.beeter.error+json";
+public class BeeterError {
+    private int status;
+    private String message;
+
+    public BeeterError() {
+        super();
+    }
+
+    public BeeterError(int status, String message) {
+        super();
+        this.status = status;
+        this.message = message;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
